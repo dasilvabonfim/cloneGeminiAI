@@ -1,43 +1,23 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
 
 
-// node --version # Should be >= 18
-// npm install @google/generative-ai
+const genAI = new GoogleGenerativeAI("AIzaSyC64q8UgUYLyTfrWT-o67bJ_jpJoRukEIA");
 
-import {
-  GoogleGenerativeAI,
-  HarmCategory,
-  HarmBlockThreshold,
-} from "@google/generative-ai";
 
-const MODEL_NAME = "gemini-1.0-pro";
-const API_KEY = "AIzaSyC64q8UgUYLyTfrWT-o67bJ_jpJoRukEIA";
+
+const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
+
+
 
 async function run(prompt) {
-  const genAI = new GoogleGenerativeAI(API_KEY);
-  const model = genAI.getGenerativeModel({ model: MODEL_NAME });
 
-  const generationConfig = {
-    temperature: 0.9,
-    topK: 1,
-    topP: 1,
-    maxOutputTokens: 2048,
-  };
+  const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
-  const safetySettings = [
-
-  ];
-
-  const chat = model.startChat({
-    generationConfig,
-    safetySettings,
-    history: [
-    ],
-  });
-
-  const result = await chat.sendMessage(prompt);
-  const response = result.response;
-  console.log(response.text());
-  return response.text();
+  const result = await model.generateContent(prompt);
+  const response = await result.response;
+  const text = response.text();
+  console.log(text);
+  return text;
 }
 
- export default run;
+export default run;
